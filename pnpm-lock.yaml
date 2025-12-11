@@ -22,7 +22,7 @@ devDependencies:
     version: 24.10.2
   '@types/pg':
     specifier: ^8.11.11
-    version: 8.15.6
+    version: 8.16.0
   '@types/seedrandom':
     specifier: ^3.0.5
     version: 3.0.8
@@ -1016,8 +1016,8 @@ packages:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
 
-  /@types/pg@8.15.6:
-    resolution: {integrity: sha512-NoaMtzhxOrubeL/7UZuNTrejB4MPAJ0RpxZqXQf2qXuVlTPuG6Y8p4u9dKRaue4yjmC7ZhzVO2/Yyyn25znrPQ==}
+  /@types/pg@8.16.0:
+    resolution: {integrity: sha512-RmhMd/wD+CF8Dfo+cVIy3RR5cl8CyfXQ0tGgW6XBL8L4LM/UTEbNXYRbLwU6w+CgrKBNbrQWt4FUtTfaU5jSYQ==}
     dependencies:
       '@types/node': 24.10.2
       pg-protocol: 1.10.3
