@@ -33,8 +33,8 @@ devDependencies:
     specifier: ^6.21.0
     version: 6.21.0(eslint@8.57.1)(typescript@5.9.3)
   better-sqlite3:
-    specifier: ^9.4.3
-    version: 9.4.3
+    specifier: ^12.5.0
+    version: 12.5.0
   cross-env:
     specifier: 7.0.3
     version: 7.0.3
@@ -76,7 +76,7 @@ devDependencies:
     version: 10.9.2(@types/node@25.0.3)(typescript@5.9.3)
   typeorm:
     specifier: 0.3.28
-    version: 0.3.28(better-sqlite3@9.4.3)(mysql2@3.16.0)(pg@8.16.3)(sqlite3@5.1.7)(ts-node@10.9.2)
+    version: 0.3.28(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(sqlite3@5.1.7)(ts-node@10.9.2)
   typescript:
     specifier: ^5.3.3
     version: 5.9.3
@@ -1179,7 +1179,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       ts-api-utils: 1.4.3(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -1658,8 +1658,9 @@ packages:
     hasBin: true
     dev: true
 
-  /better-sqlite3@9.4.3:
-    resolution: {integrity: sha512-ud0bTmD9O3uWJGuXDltyj3R47Nz0OHX8iqPOT5PMspGqlu/qQFn+5S2eFBUCrySpavTjFXbi4EgrfVvPAHlImw==}
+  /better-sqlite3@12.5.0:
+    resolution: {integrity: sha512-WwCZ/5Diz7rsF29o27o0Gcc1Du+l7Zsv7SYtVPG0X3G/uUI1LqdxrQI7c9Hs2FWpqXXERjW9hp6g3/tH7DlVKg==}
+    engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -2251,8 +2252,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /detect-libc@2.1.1:
-    resolution: {integrity: sha512-ecqj/sy1jcK1uWrwpR67UhYrIFQ+5WlGxth34WquCbamhFA6hkkwiu37o6J5xCHdo1oixJRfVRw+ywV+Hq/0Aw==}
+  /detect-libc@2.1.2:
+    resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
     dev: true
 
@@ -4214,8 +4215,8 @@ packages:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
     dev: true
 
-  /node-abi@3.77.0:
-    resolution: {integrity: sha512-DSmt0OEcLoK4i3NuscSbGjOf3bqiDEutejqENSplMSFA/gmB8mkED9G4pKWnPl7MDU4rSHebKPHeitpDfyH0cQ==}
+  /node-abi@3.85.0:
+    resolution: {integrity: sha512-zsFhmbkAzwhTft6nd3VxcG0cvJsT70rL+BIGHWVq5fi6MwGrHwzqKaxXE+Hl2GmnGItnDKPPkO5/LQqjVkIdFg==}
     engines: {node: '>=10'}
     dependencies:
       semver: 7.7.3
@@ -4280,7 +4281,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.16.1
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -4623,13 +4624,13 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      detect-libc: 2.1.1
+      detect-libc: 2.1.2
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
-      node-abi: 3.77.0
+      node-abi: 3.85.0
       pump: 3.0.3
       rc: 1.2.8
       simple-get: 4.0.1
@@ -5528,7 +5529,7 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typeorm@0.3.28(better-sqlite3@9.4.3)(mysql2@3.16.0)(pg@8.16.3)(sqlite3@5.1.7)(ts-node@10.9.2):
+  /typeorm@0.3.28(better-sqlite3@12.5.0)(mysql2@3.16.0)(pg@8.16.3)(sqlite3@5.1.7)(ts-node@10.9.2):
     resolution: {integrity: sha512-6GH7wXhtfq2D33ZuRXYwIsl/qM5685WZcODZb7noOOcRMteM9KF2x2ap3H0EBjnSV0VO4gNAfJT5Ukp0PkOlvg==}
     engines: {node: '>=16.13.0'}
     hasBin: true
@@ -5586,7 +5587,7 @@ packages:
       '@sqltools/formatter': 1.2.5
       ansis: 4.2.0
       app-root-path: 3.1.0
-      better-sqlite3: 9.4.3
+      better-sqlite3: 12.5.0
       buffer: 6.0.3
       dayjs: 1.11.19
       debug: 4.4.3
