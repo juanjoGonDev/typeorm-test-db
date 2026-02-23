@@ -1,6 +1,6 @@
 {
   "name": "typeorm-test-db",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Automated transactional lifecycle helpers for TypeORM tests",
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
