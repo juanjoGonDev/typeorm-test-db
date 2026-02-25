@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.28](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.13...v1.0.28) (2026-02-25)
+
 ### [1.0.27](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.13...v1.0.27) (2026-02-24)
 
 ### [1.0.26](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.13...v1.0.26) (2026-02-23)
