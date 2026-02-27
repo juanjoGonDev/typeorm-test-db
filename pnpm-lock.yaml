@@ -49,7 +49,7 @@ devDependencies:
     version: 30.2.0(@types/node@25.3.1)(ts-node@10.9.2)
   mysql2:
     specifier: ^3.11.2
-    version: 3.18.1(@types/node@25.3.1)
+    version: 3.18.2(@types/node@25.3.1)
   pg:
     specifier: ^8.11.5
     version: 8.19.0
@@ -76,7 +76,7 @@ devDependencies:
     version: 10.9.2(@types/node@25.3.1)(typescript@5.9.3)
   typeorm:
     specifier: 0.3.28
-    version: 0.3.28(better-sqlite3@9.4.3)(mysql2@3.18.1)(pg@8.19.0)(sqlite3@5.1.7)(ts-node@10.9.2)
+    version: 0.3.28(better-sqlite3@9.4.3)(mysql2@3.18.2)(pg@8.19.0)(sqlite3@5.1.7)(ts-node@10.9.2)
   typescript:
     specifier: ^5.3.3
     version: 5.9.3
@@ -4163,8 +4163,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /mysql2@3.18.1(@types/node@25.3.1):
-    resolution: {integrity: sha512-Mz3yJ+YqppZUFr6Q9tP0g9v3RTWGfLQ/J4RlnQ6CNrWz436+FDtFDICecsbWYwjupgfPpj8ZtNVMsCX79VKpLg==}
+  /mysql2@3.18.2(@types/node@25.3.1):
+    resolution: {integrity: sha512-UfEShBFAZZEAKjySnTUuE7BgqkYT4mx+RjoJ5aqtmwSSvNcJ/QxQPXz/y3jSxNiVRedPfgccmuBtiPCSiEEytw==}
     engines: {node: '>= 8.0'}
     peerDependencies:
       '@types/node': '>= 8'
@@ -5530,7 +5530,7 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typeorm@0.3.28(better-sqlite3@9.4.3)(mysql2@3.18.1)(pg@8.19.0)(sqlite3@5.1.7)(ts-node@10.9.2):
+  /typeorm@0.3.28(better-sqlite3@9.4.3)(mysql2@3.18.2)(pg@8.19.0)(sqlite3@5.1.7)(ts-node@10.9.2):
     resolution: {integrity: sha512-6GH7wXhtfq2D33ZuRXYwIsl/qM5685WZcODZb7noOOcRMteM9KF2x2ap3H0EBjnSV0VO4gNAfJT5Ukp0PkOlvg==}
     engines: {node: '>=16.13.0'}
     hasBin: true
@@ -5595,7 +5595,7 @@ packages:
       dedent: 1.7.0
       dotenv: 16.6.1
       glob: 10.5.0
-      mysql2: 3.18.1(@types/node@25.3.1)
+      mysql2: 3.18.2(@types/node@25.3.1)
       pg: 8.19.0
       reflect-metadata: 0.2.2
       sha.js: 2.4.12
