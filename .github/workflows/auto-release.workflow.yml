@@ -2,6 +2,7 @@ name: 🔄 Auto release
 
 permissions:
   contents: write
+  id-token: write
   pull-requests: write
 
 on:
@@ -29,6 +30,14 @@ on:
           - "preminor"
           - "prepatch"
           - "prerelease"
+      publish_current_version:
+        description: "Publish the current package.json version without creating a bump PR"
+        required: false
+        default: "no"
+        type: choice
+        options:
+          - "no"
+          - "yes"
       dry_run:
         description: "Do everything except push, PR and publish"
         required: false
@@ -59,7 +68,10 @@ jobs:
       - name: 🕵️ Check if there are at least 3 new commits since the last version
         id: check_commits
         run: |
-          if [[ "${{ github.event.inputs.force }}" == "yes" ]]; then
+          if [[ "${{ github.event.inputs.publish_current_version }}" == "yes" ]]; then
+            echo "enough_commits=true" >> $GITHUB_OUTPUT
+            echo "Current version publishing is enabled. Skipping commit check."
+          elif [[ "${{ github.event.inputs.force }}" == "yes" ]]; then
             echo "enough_commits=true" >> $GITHUB_OUTPUT
             echo "Force release is enabled. Skipping commit check."
           else
@@ -87,7 +99,7 @@ jobs:
           git config --global user.email "$USER_EMAIL"
       - name: 📦 Setup pnpm
         if: steps.check_commits.outputs.enough_commits == 'true'
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: "${{ env.PNPM_VERSION }}"
           run_install: false
@@ -95,9 +107,12 @@ jobs:
         if: steps.check_commits.outputs.enough_commits == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: "20"
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
+      - name: 🔄 Update npm
+        if: steps.check_commits.outputs.enough_commits == 'true'
+        run: npm install --global npm@^11.5.1
       - name: ⚙️ Install dependencies
         if: steps.check_commits.outputs.enough_commits == 'true'
         run: pnpm install --frozen-lockfile
@@ -120,7 +135,7 @@ jobs:
           echo "📥 Installing package..."
           pnpm add --save-dev "$PACKAGE_TARBALL"
       - name: 🆙 Dry run release
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run == 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run == 'true' && github.event.inputs.publish_current_version != 'yes'
         run: |
           git checkout main
           git pull origin main
@@ -133,8 +148,29 @@ jobs:
       - name: 🚫 Dry run active
         if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run == 'true'
         run: echo "🔍 Dry run is enabled. Skipping publishing, tagging and PR steps."
+      - name: 🏷️ Resolve current version tag
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.publish_current_version == 'yes'
+        id: get_current_tag
+        run: |
+          git checkout main
+          git pull origin main
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_TAG="v${CURRENT_VERSION}"
+          echo "Current tag: $CURRENT_TAG"
+          echo "lastTag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+      - name: 🏷️ Create current version tag
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.publish_current_version == 'yes' && github.event.inputs.dry_run != 'true'
+        run: |
+          CURRENT_TAG="${{ steps.get_current_tag.outputs.lastTag }}"
+          EXISTS=$(git ls-remote --tags origin "refs/tags/${CURRENT_TAG}" | wc -l)
+          if [ $EXISTS -eq 1 ]; then
+            echo "Tag ${CURRENT_TAG} already exists on origin"
+            exit 1
+          fi
+          git tag "$CURRENT_TAG"
+          git push origin "refs/tags/${CURRENT_TAG}"
       - name: 🆙 Bump version and create a git tag
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         run: |
           git checkout main
           git pull origin main
@@ -153,7 +189,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_FINE }}
       - name: ⏱️ Wait for changes to be registered
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         timeout-minutes: 2
         run: |
           while true; do
@@ -167,7 +203,7 @@ jobs:
             sleep 5s
           done
       - name: 🏷️ Get last existing tag
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         id: get_new_tag
         run: |
           LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
@@ -177,8 +213,22 @@ jobs:
           fi
           echo "Last tag found: $LAST_TAG"
           echo "lastTag=$LAST_TAG" >> $GITHUB_OUTPUT
-      - name: 📝 Create pull request
+      - name: 🏷️ Resolve release tag
         if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        id: resolve_release_tag
+        run: |
+          RELEASE_TAG="${{ steps.get_current_tag.outputs.lastTag }}"
+          if [[ -z "$RELEASE_TAG" ]]; then
+            RELEASE_TAG="${{ steps.get_new_tag.outputs.lastTag }}"
+          fi
+          if [[ -z "$RELEASE_TAG" ]]; then
+            echo "No release tag found, exiting"
+            exit 1
+          fi
+          echo "Release tag: $RELEASE_TAG"
+          echo "lastTag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+      - name: 📝 Create pull request
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         id: create_pr
         run: |
           PR_DATA=$(curl \
@@ -205,12 +255,12 @@ jobs:
           echo "Detected PR number: $PR_NUMBER"
           echo "prNumber=$PR_NUMBER" >> $GITHUB_OUTPUT
       - name: 👤 Assign PR to user
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         run: gh pr edit ${{ steps.create_pr.outputs.prNumber }} --add-assignee "${{ env.ACTOR_USERNAME }}"
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_FINE }}
       - name: 🕵️ Check if PR is approved
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         uses: actions/github-script@v8
         timeout-minutes: 5
         env:
@@ -242,7 +292,7 @@ jobs:
             throw new Error('PR approval timed out');
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: ⌛ Wait for all checks to pass
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         uses: actions/github-script@v8
         timeout-minutes: 5
         env:
@@ -284,7 +334,7 @@ jobs:
               await new Promise(resolve => setTimeout(resolve, interval));
             }
       - name: ✅ Merge PR
-        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.publish_current_version != 'yes'
         uses: actions/github-script@v8
         env:
           PULL_REQUEST_NUMBER: ${{ steps.create_pr.outputs.prNumber }}
@@ -316,8 +366,6 @@ jobs:
       - name: 🎉 Publish to npm
         if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
       - name: 📦 Create Release
         if: steps.check_commits.outputs.enough_commits == 'true' && github.event.inputs.dry_run != 'true'
         id: create_release
@@ -325,8 +373,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ steps.get_new_tag.outputs.lastTag }}
-          name: Release ${{ steps.get_new_tag.outputs.lastTag }}
+          tag: ${{ steps.resolve_release_tag.outputs.lastTag }}
+          name: Release ${{ steps.resolve_release_tag.outputs.lastTag }}
           draft: false
           prerelease: false
           makeLatest: true
@@ -336,7 +384,7 @@ jobs:
         with:
           script: |
             const runNumber = ${{ github.run_number }};
-            const newTag = '${{ steps.get_new_tag.outputs.lastTag }}';
+            const newTag = '${{ steps.resolve_release_tag.outputs.lastTag }}';
             const { owner, repo } = context.repo;
             // Delete branch
             try {
