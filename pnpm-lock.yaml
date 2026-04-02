@@ -70,7 +70,7 @@ devDependencies:
     version: 9.5.0
   ts-jest:
     specifier: ^29.1.1
-    version: 29.4.6(@babel/core@7.29.0)(jest@30.3.0)(typescript@5.9.3)
+    version: 29.4.9(@babel/core@7.29.0)(jest@30.3.0)(typescript@5.9.3)
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@25.5.0)(typescript@5.9.3)
@@ -1182,7 +1182,7 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.7.4
+      semver: 7.7.2
       ts-api-utils: 1.4.3(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -4246,7 +4246,7 @@ packages:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.7.3
+      semver: 7.7.4
       tar: 6.2.1
       which: 2.0.2
     transitivePeerDependencies:
@@ -4288,7 +4288,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.16.1
-      semver: 7.7.4
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -5401,8 +5401,8 @@ packages:
       typescript: 5.9.3
     dev: true
 
-  /ts-jest@29.4.6(@babel/core@7.29.0)(jest@30.3.0)(typescript@5.9.3):
-    resolution: {integrity: sha512-fSpWtOO/1AjSNQguk43hb/JCo16oJDnMJf3CdEGNkqsEX3t0KX96xvyX1D7PfLCpVoKu4MfVrqUkFyblYoY4lA==}
+  /ts-jest@29.4.9(@babel/core@7.29.0)(jest@30.3.0)(typescript@5.9.3):
+    resolution: {integrity: sha512-LTb9496gYPMCqjeDLdPrKuXtncudeV1yRZnF4Wo5l3SFi0RYEnYRNgMrFIdg+FHvfzjCyQk1cLncWVqiSX+EvQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -5413,7 +5413,7 @@ packages:
       esbuild: '*'
       jest: ^29.0.0 || ^30.0.0
       jest-util: ^29.0.0 || ^30.0.0
-      typescript: '>=4.3 <6'
+      typescript: '>=4.3 <7'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
