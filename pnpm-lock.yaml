@@ -52,7 +52,7 @@ devDependencies:
     version: 3.22.3(@types/node@25.9.1)
   pg:
     specifier: ^8.11.5
-    version: 8.20.0
+    version: 8.21.0
   rimraf:
     specifier: ^5.0.5
     version: 5.0.10
@@ -76,7 +76,7 @@ devDependencies:
     version: 10.9.2(@types/node@25.9.1)(typescript@5.9.3)
   typeorm:
     specifier: 0.3.29
-    version: 0.3.29(better-sqlite3@9.4.3)(mysql2@3.22.3)(pg@8.20.0)(sqlite3@5.1.7)(ts-node@10.9.2)
+    version: 0.3.29(better-sqlite3@9.4.3)(mysql2@3.22.3)(pg@8.21.0)(sqlite3@5.1.7)(ts-node@10.9.2)
   typescript:
     specifier: ^5.3.3
     version: 5.9.3
@@ -4520,8 +4520,8 @@ packages:
     dev: true
     optional: true
 
-  /pg-connection-string@2.12.0:
-    resolution: {integrity: sha512-U7qg+bpswf3Cs5xLzRqbXbQl85ng0mfSV/J0nnA31MCLgvEaAo7CIhmeyrmJpOr7o+zm0rXK+hNnT5l9RHkCkQ==}
+  /pg-connection-string@2.13.0:
+    resolution: {integrity: sha512-EMnU9E2fSULdsbErBbMaXJvFeD9B4+nPcM3f+4lsiCR0BHLPrLVjv3DbyM2hgQQviKJaTWIRRTjKjWlHg3p2ig==}
     dev: true
 
   /pg-int8@1.0.1:
@@ -4529,16 +4529,20 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
-  /pg-pool@3.13.0(pg@8.20.0):
-    resolution: {integrity: sha512-gB+R+Xud1gLFuRD/QgOIgGOBE2KCQPaPwkzBBGC9oG69pHTkhQeIuejVIk3/cnDyX39av2AxomQiyPT13WKHQA==}
+  /pg-pool@3.14.0(pg@8.21.0):
+    resolution: {integrity: sha512-gKtPkFdQPU3DksooVLi9LsjZxrsBUZIpa+7aVx+LV5pNh0KzP4Zleud2po+ConrxbuXGBJ6Hfer6hdgpIBpBaw==}
     peerDependencies:
       pg: '>=8.0'
     dependencies:
-      pg: 8.20.0
+      pg: 8.21.0
     dev: true
 
   /pg-protocol@1.13.0:
     resolution: {integrity: sha512-zzdvXfS6v89r6v7OcFCHfHlyG/wvry1ALxZo4LqgUoy7W9xhBDMaqOuMiF3qEV45VqsN6rdlcehHrfDtlCPc8w==}
+    dev: true
+
+  /pg-protocol@1.14.0:
+    resolution: {integrity: sha512-n5taZ1kO3s9ngDTVxsEznOqCyToTgz0FLuPq0B33COy5pPpuWJpY3/2oRBVETuOgzdqRXfWpM9HIhp2LBBT1BA==}
     dev: true
 
   /pg-types@2.2.0:
@@ -4552,8 +4556,8 @@ packages:
       postgres-interval: 1.2.0
     dev: true
 
-  /pg@8.20.0:
-    resolution: {integrity: sha512-ldhMxz2r8fl/6QkXnBD3CR9/xg694oT6DZQ2s6c/RI28OjtSOpxnPrUCGOBJ46RCUxcWdx3p6kw/xnDHjKvaRA==}
+  /pg@8.21.0:
+    resolution: {integrity: sha512-AUP1EYJuHraQGsVoCQVIcM7TEJVGtDzxWtGFZd8rds9d+CCXlU5Js1rYgfLNvxy9iJrpHjGrRjoi/3BT9fRyiA==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
       pg-native: '>=3.0.1'
@@ -4561,9 +4565,9 @@ packages:
       pg-native:
         optional: true
     dependencies:
-      pg-connection-string: 2.12.0
-      pg-pool: 3.13.0(pg@8.20.0)
-      pg-protocol: 1.13.0
+      pg-connection-string: 2.13.0
+      pg-pool: 3.14.0(pg@8.21.0)
+      pg-protocol: 1.14.0
       pg-types: 2.2.0
       pgpass: 1.0.5
     optionalDependencies:
@@ -5550,7 +5554,7 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: true
 
-  /typeorm@0.3.29(better-sqlite3@9.4.3)(mysql2@3.22.3)(pg@8.20.0)(sqlite3@5.1.7)(ts-node@10.9.2):
+  /typeorm@0.3.29(better-sqlite3@9.4.3)(mysql2@3.22.3)(pg@8.21.0)(sqlite3@5.1.7)(ts-node@10.9.2):
     resolution: {integrity: sha512-wwPEX/df4l72gCmOsrs0otJZYLGA9lLQkUZCkukbsymEycV4zXv2KM7wU7v2r8L01TaCgY9ApSSqHQWBOUhEoQ==}
     engines: {node: '>=16.13.0'}
     hasBin: true
@@ -5616,7 +5620,7 @@ packages:
       dotenv: 16.6.1
       glob: 10.5.0
       mysql2: 3.22.3(@types/node@25.9.1)
-      pg: 8.20.0
+      pg: 8.21.0
       reflect-metadata: 0.2.2
       sha.js: 2.4.12
       sql-highlight: 6.1.0
