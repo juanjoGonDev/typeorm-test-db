@@ -22,4 +22,10 @@
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=juanjoGonDev/typeorm-test-db&type=Date)](https://www.star-history.com/#juanjoGonDev/typeorm-test-db&Date)
+<a href="https://www.star-history.com/?repos=juanjoGonDev%2Ftypeorm-test-db&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=juanjoGonDev/typeorm-test-db&type=date&theme=dark&legend=top-left&sealed_token=wbXLuJ9bDc3vk79p06cIEcvlpeaSzITTR6GsPFBwr0eDpjEZomeoLF89avn3Dghdz2bcPFcijr3GQL6BlmPeqWFrpgeISKHctphsTBys47s6DU2Dxa3zf141hzvfrivLcWNaFUSoD3QhZhmSlBiR8ovMw6BLrXSlZp5qBLKXsfZnRWSwVHQVYivC4fFE" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=juanjoGonDev/typeorm-test-db&type=date&legend=top-left&sealed_token=wbXLuJ9bDc3vk79p06cIEcvlpeaSzITTR6GsPFBwr0eDpjEZomeoLF89avn3Dghdz2bcPFcijr3GQL6BlmPeqWFrpgeISKHctphsTBys47s6DU2Dxa3zf141hzvfrivLcWNaFUSoD3QhZhmSlBiR8ovMw6BLrXSlZp5qBLKXsfZnRWSwVHQVYivC4fFE" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=juanjoGonDev/typeorm-test-db&type=date&legend=top-left&sealed_token=wbXLuJ9bDc3vk79p06cIEcvlpeaSzITTR6GsPFBwr0eDpjEZomeoLF89avn3Dghdz2bcPFcijr3GQL6BlmPeqWFrpgeISKHctphsTBys47s6DU2Dxa3zf141hzvfrivLcWNaFUSoD3QhZhmSlBiR8ovMw6BLrXSlZp5qBLKXsfZnRWSwVHQVYivC4fFE" />
+ </picture>
+</a>
