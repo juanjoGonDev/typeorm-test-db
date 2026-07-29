@@ -1,7 +1,7 @@
 name: 🤖 Pull request automation
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize, labeled]
 
 permissions: read-all
@@ -38,11 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
-      issues: read
-      pull-requests: read
+      contents: write
+      issues: write
+      pull-requests: write
     env:
-      AUTOMATION_TOKEN: ${{ secrets.REPOSITORY_AUTOMATION_TOKEN || secrets.PAT_FINE }}
       PR_URL: ${{ github.event.pull_request.html_url }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
@@ -68,20 +67,17 @@ jobs:
           esac
           echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
           echo "manual=$manual" >> "$GITHUB_OUTPUT"
-      - name: Explain missing token
-        if: env.AUTOMATION_TOKEN == ''
-        run: echo "::notice title=Repository automation token missing::Configure REPOSITORY_AUTOMATION_TOKEN or PAT_FINE with Contents, Issues and Pull requests write access."
       - name: Approve and queue eligible update
-        if: env.AUTOMATION_TOKEN != '' && steps.policy.outputs.eligible == 'true'
+        if: steps.policy.outputs.eligible == 'true'
         env:
-          GH_TOKEN: ${{ env.AUTOMATION_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh pr review "$PR_URL" --approve --body "Approved automatically by the repository dependency policy."
           gh pr merge "$PR_URL" --auto --squash --match-head-commit "$HEAD_SHA"
       - name: Mark production major for manual QA
-        if: env.AUTOMATION_TOKEN != '' && steps.policy.outputs.manual == 'true'
+        if: steps.policy.outputs.manual == 'true'
         env:
-          GH_TOKEN: ${{ env.AUTOMATION_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh label create "requires-manual-qa" --color "B60205" --description "Requires explicit maintainer approval before auto-merge" --force
           gh pr edit "$PR_URL" --add-label "requires-manual-qa"
