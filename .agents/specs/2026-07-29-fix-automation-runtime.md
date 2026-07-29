@@ -42,6 +42,7 @@ Audit the merged repository automation after real Dependabot executions, correct
 
 - Workflow YAML and repository checks are validated by pull-request CI; changed Actions remain pinned by immutable SHA.
 - `auto-release.workflow.yml` still declares `environment: admin` and reads `secrets.PAT_FINE`; the corrective workflow does not modify that contract.
+- GitHub documents that Dependabot-triggered workflows receive Dependabot secrets and cannot access Actions repository or environment secrets.
 - Full actor-identity validation requires the configured Dependabot secret and subsequent Dependabot/release events after merge.
 
 ## Rollback
