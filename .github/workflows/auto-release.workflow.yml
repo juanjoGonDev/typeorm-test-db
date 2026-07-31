@@ -308,6 +308,22 @@ jobs:
         if: github.event.inputs.dry_run == 'true'
         run: echo "Current version recovery validated without publishing."
 
+      - name: 🔒 Validate recovery tag state
+        if: github.event.inputs.dry_run != 'true'
+        env:
+          RELEASE_TAG: ${{ steps.metadata.outputs.release_tag }}
+          COMMIT_SHA: ${{ steps.metadata.outputs.commit_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+          if git rev-parse --verify "${RELEASE_TAG}^{commit}" >/dev/null 2>&1; then
+            existing_sha=$(git rev-list -n 1 "$RELEASE_TAG")
+            if [[ "$existing_sha" != "$COMMIT_SHA" ]]; then
+              echo "::error title=Release tag collision::$RELEASE_TAG points to $existing_sha instead of $COMMIT_SHA."
+              exit 1
+            fi
+          fi
+
       - name: 🔎 Check npm publication state
         if: github.event.inputs.dry_run != 'true'
         id: npm_state
@@ -371,3 +387,19 @@ jobs:
             --verify-tag \
             --title "Release ${RELEASE_TAG}" \
             --notes "Automated recovery release ${RELEASE_TAG}."
+
+      - name: ✅ Verify recovered release
+        if: github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_NAME: ${{ steps.metadata.outputs.package_name }}
+          PACKAGE_VERSION: ${{ steps.metadata.outputs.package_version }}
+          RELEASE_TAG: ${{ steps.metadata.outputs.release_tag }}
+          COMMIT_SHA: ${{ steps.metadata.outputs.commit_sha }}
+        run: |
+          set -euo pipefail
+          published_version=$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --json | jq -r .)
+          [[ "$published_version" == "$PACKAGE_VERSION" ]]
+          gh release view "$RELEASE_TAG" >/dev/null
+          tag_sha=$(git rev-list -n 1 "$RELEASE_TAG")
+          [[ "$tag_sha" == "$COMMIT_SHA" ]]
