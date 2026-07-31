@@ -88,7 +88,6 @@ jobs:
           gh pr merge "$PR_URL" \
             --auto \
             --squash \
-            --delete-branch \
             --match-head-commit "$HEAD_SHA"
 
   dependabot:
