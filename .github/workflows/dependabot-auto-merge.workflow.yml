@@ -12,7 +12,7 @@ permissions: read-all
 
 concurrency:
   group: dependabot-auto-merge-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   approve-release:
@@ -80,9 +80,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          current_head=$(gh pr view "$PR_URL" --json headRefOid --jq .headRefOid)
+          if [[ "$current_head" != "$HEAD_SHA" ]]; then
+            echo "Skipping stale event for $HEAD_SHA; current head is $current_head."
+            exit 0
+          fi
           auto_merge_enabled=$(gh pr view "$PR_URL" --json autoMergeRequest --jq '.autoMergeRequest != null')
           if [[ "$auto_merge_enabled" == "true" ]]; then
-            echo "Auto-merge is already enabled for $HEAD_SHA."
+            echo "Auto-merge is already enabled for the current release pull request."
             exit 0
           fi
           gh pr merge "$PR_URL" \
