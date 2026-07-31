@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.58](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.57...v1.0.58) (2026-07-31)
+
+
+### Bug Fixes
+
+* **actions:** repair automation actor separation ([#239](https://github.com/juanjoGonDev/typeorm-test-db/issues/239)) ([f60053d](https://github.com/juanjoGonDev/typeorm-test-db/commit/f60053d5ba79622e32ea7e83fea433b2ff57dd9f))
+* **actions:** require manual review for major updates ([#240](https://github.com/juanjoGonDev/typeorm-test-db/issues/240)) ([6411a04](https://github.com/juanjoGonDev/typeorm-test-db/commit/6411a04b236405c8d5a4c7a935ed9d48d5d93924))
+
 ### [1.0.57](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.56...v1.0.57) (2026-07-23)
 
 ### [1.0.56](https://github.com/juanjoGonDev/typeorm-test-db/compare/v1.0.55...v1.0.56) (2026-07-10)
