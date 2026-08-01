@@ -112,16 +112,17 @@ jobs:
           fi
 
           if existing_release_json=$(gh release view "$release_tag" --json tagName,isDraft,isPrerelease 2>/dev/null); then
-            git fetch --force origin "refs/tags/${release_tag}:refs/tags/${release_tag}"
-            existing_sha=$(git rev-list -n 1 "$release_tag")
             existing_draft=$(jq -r .isDraft <<<"$existing_release_json")
             existing_prerelease=$(jq -r .isPrerelease <<<"$existing_release_json")
-            if [[ "$existing_sha" != "$release_sha" ]]; then
-              echo "::error title=Release target mismatch::$release_tag points to $existing_sha instead of $release_sha."
-              exit 1
-            fi
             if [[ "$existing_draft" != "false" || "$existing_prerelease" != "$prerelease" ]]; then
               echo "::error title=Release metadata mismatch::$release_tag has draft=$existing_draft and prerelease=$existing_prerelease."
+              exit 1
+            fi
+
+            git fetch --force origin "refs/tags/${release_tag}:refs/tags/${release_tag}"
+            existing_sha=$(git rev-list -n 1 "$release_tag")
+            if [[ "$existing_sha" != "$release_sha" ]]; then
+              echo "::error title=Release target mismatch::$release_tag points to $existing_sha instead of $release_sha."
               exit 1
             fi
             echo "create=false" >> "$GITHUB_OUTPUT"
