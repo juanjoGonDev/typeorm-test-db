@@ -14,12 +14,14 @@ No merge, GitHub Release, tag, npm publication, or deployment is part of this im
 
 ## Evidence
 
-- The current preparation workflow is schedule-driven and creates `release/<run-number>` branches.
-- The current npm workflow is coupled to release pull-request closure.
-- `package.json` is `typeorm-test-db@1.0.57`.
+- The previous preparation workflow was schedule-driven and created `release/<run-number>` branches.
+- The previous npm workflow was coupled to release pull-request closure.
+- `package.json` remains `typeorm-test-db@1.0.57` in this implementation branch.
 - Pull request `#244` is an existing release pull request created by the previous pipeline and remains outside this implementation branch.
 - The repository supports native auto-merge.
 - The `admin` environment already owns the release automation credential and npm OIDC boundary.
+- Review findings from the equivalent DevBar workflow exposed three shared safety defects: approval creation not atomically bound to the validated head, monotonicity checked against a recorded PR base SHA instead of the live default branch, and release metadata checked only after attempting to fetch a potentially absent draft tag.
+- Pull request `#245` received no CodeRabbit inline findings; the shared defects were proactively corrected here to keep both release implementations aligned.
 
 ## Scope
 
@@ -63,7 +65,7 @@ No merge, GitHub Release, tag, npm publication, or deployment is part of this im
 - same repository, owner author, default base, `auto-release` label, and exact `release/v<version>` branch
 - current event and live head SHA equality
 - exact title contract
-- strict and monotonic SemVer
+- strict and monotonic SemVer against the live default-branch package version
 - package identity and version
 - exact changed files: `CHANGELOG.md` and `package.json`
 - changelog release entry
@@ -79,6 +81,7 @@ The owner-scoped `PAT_FINE` enables native squash auto-merge with `--match-head-
 - no-ops when `package.json` did not change
 - resolves the first-parent commit that introduced the current version, including multi-commit pushes and later same-version metadata changes
 - rejects non-SemVer versions, ancestry violations, tag collisions, release target collisions, and metadata drift
+- validates draft/prerelease metadata before attempting to fetch an existing tag
 - validates the `PAT_FINE` actor as the repository owner
 - creates an immutable lightweight tag and generated GitHub Release notes
 - verifies tag target and release metadata
@@ -98,14 +101,16 @@ The owner-scoped `PAT_FINE` enables native squash auto-merge with `--match-head-
 
 ### Dependabot
 
-`dependabot-auto-merge.workflow.yml` returns to one responsibility: Dependabot policy. Patch and minor updates remain eligible; majors remain manual. Release validation is not duplicated there.
+`dependabot-auto-merge.workflow.yml` returns to one responsibility: Dependabot policy. Patch and minor updates remain eligible; majors remain manual. Release validation is not duplicated there. Owner approval is created through the pull-request review API with an explicit `commit_id`, after confirming the live head still equals the event head.
 
 ## Risks and controls
 
 - **Privileged event handling:** release validation uses a trusted workflow definition and never executes PR content.
 - **Secret exposure:** release jobs are restricted to the `admin` environment and validate the authenticated token owner.
-- **Stale events:** every approval and merge action rechecks the current head SHA.
+- **Stale events:** every approval and merge action rechecks the current head SHA; Dependabot approvals are attached to the exact validated commit.
+- **Stale version baseline:** release PR monotonicity is checked against the live default branch rather than the PR's recorded base SHA.
 - **Event suppression:** event-emitting transitions use the owner token rather than `GITHUB_TOKEN`.
+- **Draft release diagnostics:** release metadata is rejected before any tag fetch that could otherwise fail opaquely.
 - **Tag replacement:** no force push or tag mutation is permitted.
 - **Duplicate publication:** GitHub Release and npm operations are idempotent and fail closed on mismatched existing state.
 - **Manual releases:** they must use an owner-authored GitHub Release whose tag points to a default-branch package version.
@@ -117,6 +122,9 @@ The owner-scoped `PAT_FINE` enables native squash auto-merge with `--match-head-
 - Below threshold, preparation exits successfully without a branch or PR.
 - At or above threshold, preparation creates only a version/changelog PR.
 - The generated PR cannot be approved or queued unless all trust checks pass for the exact current head.
+- Dependabot approval cannot migrate to a newer unvalidated head.
+- A release PR cannot pass monotonicity using a stale default-branch version.
+- Draft or prerelease metadata fails with the intended release diagnostic before tag retrieval.
 - Merging a version PR causes GitHub Release creation from the exact version-introducing commit.
 - Publishing a valid owner GitHub Release invokes the unchanged npm trusted-publisher workflow file.
 - Manual and automated GitHub Releases share the same npm path.
@@ -125,16 +133,17 @@ The owner-scoped `PAT_FINE` enables native squash auto-merge with `--match-head-
 
 ## Checks
 
-- Parse all changed workflow YAML.
-- Run `bash -n` over every changed shell block after neutralizing GitHub expressions.
-- Run JavaScript syntax checks over `actions/github-script` programs.
-- Verify every third-party Action reference is pinned to a full commit SHA.
-- Assert the npm workflow filename and display name remain unchanged.
-- Assert preparation contains no npm publication, tag push, release creation, direct merge, or check polling.
-- Assert GitHub Release creation contains no npm publication.
-- Assert npm publication is triggered only by `release.published`.
-- Assert no force push, tag mutation, npm token fallback, or destructive failure cleanup exists.
-- Run repository CI on the final pull-request head.
+- Workflow YAML parsed by GitHub Actions.
+- Shell blocks and `actions/github-script` programs passed the implementation static validation.
+- Every third-party Action reference remains pinned to a full commit SHA.
+- The npm workflow filename and display name remain unchanged.
+- Preparation contains no npm publication, tag push, release creation, direct merge, or check polling.
+- GitHub Release creation contains no npm publication.
+- npm publication is triggered only by `release.published`.
+- No force push, tag mutation, npm token fallback, or destructive failure cleanup exists.
+- CI run `30715397205`: success.
+- Dependabot-only run `30715397204`: skipped as expected for an owner-authored implementation PR.
+- CodeRabbit: no inline review threads or findings were present on pull request `#245`; the three shared safety defects identified in DevBar were proactively corrected here.
 
 ## Rollback
 
@@ -143,10 +152,10 @@ Revert the implementation pull request. Existing tags, GitHub Releases, npm vers
 ## Delivery
 
 - Branch: `agent/refactor-event-driven-release`
-- Pull request: pending
+- Pull request: `#245`
 - Merge: requires explicit owner approval
 - Publication: not performed
 
 ## Status
 
-Implementation in progress.
+Implementation, cross-repository review hardening, and repository validation are complete. Delivery remains gated by explicit owner merge approval; no merge, tag, GitHub Release, npm publication, or deployment has been performed.
