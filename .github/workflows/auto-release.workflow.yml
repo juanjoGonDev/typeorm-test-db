@@ -109,6 +109,8 @@ jobs:
         run: pnpm build
 
       - name: 🧪 Verify package archive and installation
+        env:
+          NPM_CONFIG_USERCONFIG: /dev/null
         run: |
           set -euo pipefail
           package_dir=$(mktemp -d)
